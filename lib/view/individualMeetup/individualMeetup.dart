@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:promilo_task/view/individualMeetup/detailPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class IndividualMeetup extends StatefulWidget {
@@ -72,7 +73,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: true,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight + 1.0),
+        preferredSize: const Size.fromHeight(kToolbarHeight + 1.0),
         child: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: true,
@@ -80,7 +81,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
               onPressed: () {
                 removeLoginData();
               },
-              icon: Icon(Icons.arrow_back_ios_rounded)),
+              icon: const Icon(Icons.arrow_back_ios_rounded)),
           title: Text(
             "Individual Meetup",
             style: TextStyle(
@@ -97,6 +98,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
           ),
           Expanded(
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(height: height * 0.025),
@@ -124,8 +126,11 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                           itemCount: imagesData.length,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
-                            return trendingPopularPeopleCard(
-                                height: height, width: width);
+                            return Padding(
+                              padding: EdgeInsets.only(left: width * 0.06),
+                              child: trendingPopularPeopleCard(
+                                  height: height, width: width,index : index),
+                            );
                           },
                         ),
                       ),
@@ -195,9 +200,9 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
           hintText: "Search",
           hintStyle: WidgetStatePropertyAll(
               TextStyle(color: Colors.black54, fontSize: height * 0.019)),
-          elevation: WidgetStatePropertyAll(0),
-          surfaceTintColor: WidgetStatePropertyAll(Colors.white),
-          backgroundColor: WidgetStatePropertyAll(Colors.white),
+          elevation: const WidgetStatePropertyAll(0),
+          surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
+          backgroundColor: const WidgetStatePropertyAll(Colors.white),
           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: BorderSide(color: HexColor("#072e43"), width: 1.5))),
@@ -218,7 +223,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
               itemCount: imgList.length,
               options: CarouselOptions(
                 height: height * 0.25,
-                viewportFraction: 0.99,
+                viewportFraction: 0.99,scrollPhysics: const BouncingScrollPhysics(),
                 enableInfiniteScroll: false,
                 autoPlay: false,
                 onPageChanged: (index, reason) {
@@ -290,14 +295,15 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
     );
   }
 
-  Widget trendingPopularPeopleCard({width, height}) {
+  Widget trendingPopularPeopleCard({width, height,index}) {
+
     return Container(
       height: height * 0.2,
       width: width * 0.8,
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black45),
           borderRadius: BorderRadius.circular(10)),
-      margin: EdgeInsets.only(left: width * 0.06),
+      margin: EdgeInsets.only(right: width * 0.03),
       child: Column(
         children: [
           Padding(
@@ -312,7 +318,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                       shape: BoxShape.circle,
                       border:
                           Border.all(color: HexColor("#072e43"), width: 1.5),
-                      image: DecorationImage(
+                      image: const DecorationImage(
                           image: NetworkImage(
                               "https://i.pinimg.com/564x/36/ef/67/36ef67988108c24e34fbffec9dcd6cb4.jpg"))),
                 ),
@@ -380,7 +386,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                       left: width * 0.03,
                       top: width * 0.01,
                       bottom: width * 0.01),
-                  child: Text(
+                  child: const Text(
                     "See more",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -394,32 +400,35 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
   }
 
   Widget topTrendingMeetupCard({width, height, meetup, int index = 0}) {
-    return Container(
-      width: width * 0.45,
-      margin: EdgeInsets.only(left: width * 0.06),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        image: DecorationImage(
-          image: NetworkImage(meetup),
-          fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => Description(),));},
+      child: Container(
+        width: width * 0.45,
+        margin: EdgeInsets.only(left: width * 0.06),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(meetup),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: Container(
-          padding: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(10),
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10))),
-          child: Text(
-            "0${(index + 1).toString()}",
-            style: TextStyle(
-                fontSize: height * 0.05,
-                color: Colors.black,
-                fontWeight: FontWeight.w900),
+        child: Align(
+          alignment: Alignment.bottomRight,
+          child: Container(
+            padding: const EdgeInsets.all(8.0),
+            decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomRight: Radius.circular(10))),
+            child: Text(
+              "0${(index + 1).toString()}",
+              style: TextStyle(
+                  fontSize: height * 0.05,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w900),
+            ),
           ),
         ),
       ),

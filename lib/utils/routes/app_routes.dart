@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../view/Authentication/loginPage.dart';
+import '../../view/individualMeetup/detailPage.dart';
 import '../../view/individualMeetup/individualMeetup.dart';
 import '../../view/splash_screen.dart';
 import '../../view/widgets/customNavigationBar.dart';
@@ -16,6 +17,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => CustomBottonNaviBar());
       case '/individualMeetup':
         return MaterialPageRoute(builder: (_) => IndividualMeetup());
+        case '/detailPage':
+        return MaterialPageRoute(builder: (_) => Description());
       default:
         return null;
     }
