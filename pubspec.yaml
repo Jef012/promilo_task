@@ -34,6 +34,9 @@ dependencies:
   fluttertoast: ^8.2.6
   shared_preferences: ^2.2.3
   hexcolor: ^3.0.1
+  carousel_slider: ^4.2.1
+  persistent_bottom_nav_bar: ^5.0.2
+  crypto: ^3.0.3
 
 
 

@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../controller/repository/portfolioRepository.dart';
+import '../../models/authTokenModel.dart';
 import '../widgets.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,7 +66,8 @@ class _LoginPageState extends State<LoginPage> {
     var width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.white,resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text("promilo"),
         centerTitle: true,
@@ -92,7 +98,8 @@ class _LoginPageState extends State<LoginPage> {
                 key: _formKey,
                 onChanged: () {
                   setState(() {
-                    _isButtonEnabled = _formKey.currentState?.validate() ?? false;
+                    _isButtonEnabled =
+                        _formKey.currentState?.validate() ?? false;
                   });
                 },
                 child: Column(
@@ -109,9 +116,10 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {
                           _rememberMe = value!;
                         });
-                      },onSaved: (String? value) {
-                      emailOrNumber = value!;
-                    },
+                      },
+                      onSaved: (String? value) {
+                        emailOrNumber = value!;
+                      },
                     ),
                     SizedBox(height: height * 0.02),
                     CustomTextfield(
@@ -126,25 +134,28 @@ class _LoginPageState extends State<LoginPage> {
                         setState(() {
                           _rememberMe = value!;
                         });
-                      },onSaved: (String? value) {
-                      password = value!;
-                    },
+                      },
+                      onSaved: (String? value) {
+                        password = value!;
+                      },
                     ),
                     SizedBox(height: height * 0.04),
                     GestureDetector(
                       onTap: _isButtonEnabled
                           ? () {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          print('Logged in successfully');
-                          print('emailOrNumber :: $emailOrNumber');
-                          print('password :: $password');
-                          Navigator.of(context).pushReplacementNamed('/individualMeetup');
-                        }
-                      }
+                              if (_formKey.currentState!.validate()) {
+                                _formKey.currentState!.save();
+                                print('Logged in successfully');
+                                print('emailOrNumber :: $emailOrNumber');
+                                print('password :: $password');
+
+                                login();
+                              }
+                            }
                           : null,
                       child: Container(
-                        margin: EdgeInsets.only(left: width * 0.06, right: width * 0.06),
+                        margin: EdgeInsets.only(
+                            left: width * 0.06, right: width * 0.06),
                         height: height * 0.06,
                         width: width,
                         child: Center(
@@ -158,68 +169,79 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         decoration: BoxDecoration(
-                          color: HexColor("#b4c6d3") ,
+                          color: HexColor("#b4c6d3"),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color:_isButtonEnabled ?HexColor("#0b8ce9"):Colors.grey,
+                            color: _isButtonEnabled
+                                ? HexColor("#0b8ce9")
+                                : Colors.grey,
                             width: 2,
                           ),
                         ),
                       ),
                     ),
                     SizedBox(height: height * 0.04),
-                    customDivider(width: width,height: height),
+                    customDivider(width: width, height: height),
                     SizedBox(height: height * 0.04),
-                    customButtons(width: width,height: height),
+                    customButtons(width: width, height: height),
                     SizedBox(height: height * 0.04),
                     Padding(
-                      padding: EdgeInsets.only(left: width * 0.06, right: width * 0.06),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      padding: EdgeInsets.only(
+                          left: width * 0.06, right: width * 0.06),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                        Column(crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                          "Business User?",
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontSize: height * 0.019,
-                            fontWeight: FontWeight.w600,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Business User?",
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: height * 0.019,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "Login Here",
+                                style: TextStyle(
+                                  color: HexColor("#036599"),
+                                  fontSize: height * 0.018,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                          Text(
-                            "Login Here",
-                            style: TextStyle(
-                              color: HexColor("#036599"),
-                              fontSize: height * 0.018,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "Don't have an account",
+                                style: TextStyle(
+                                  color: Colors.black45,
+                                  fontSize: height * 0.019,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "Sign Up",
+                                style: TextStyle(
+                                  color: HexColor("#036599"),
+                                  fontSize: height * 0.018,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
-                      ),Column(crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Don't have an account",
-                              style: TextStyle(
-                                color: Colors.black45,
-                                fontSize: height * 0.019,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                color: HexColor("#036599"),
-                                fontSize: height * 0.018,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        )],),
+                      ),
                     ),
                     SizedBox(height: height * 0.04),
-                    Column(crossAxisAlignment: CrossAxisAlignment.center,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(textAlign: TextAlign.center,
+                        Text(
+                          textAlign: TextAlign.center,
                           "By continuing,you agree to ",
                           style: TextStyle(
                             color: HexColor("#98a3b9"),
@@ -235,13 +257,17 @@ class _LoginPageState extends State<LoginPage> {
                               fontSize: height * 0.017,
                               fontWeight: FontWeight.w600,
                             ),
-                            children:  <TextSpan>[
-                              TextSpan(text: " Terms of Use & Privacy Policy", style: TextStyle(fontWeight: FontWeight.bold,color: Colors.black87,fontSize:  height * 0.017,)),
-
+                            children: <TextSpan>[
+                              TextSpan(
+                                  text: " Terms of Use & Privacy Policy",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                    fontSize: height * 0.017,
+                                  )),
                             ],
                           ),
                         ),
-
                       ],
                     )
                   ],
@@ -254,4 +280,26 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  login() {
+    print("email: $emailOrNumber, password: $password");
+    var bytes = utf8.encode(password);
+    var hashedPassword = sha256.convert(bytes).toString();
+    AuthenticationRepository().login({
+      "username": emailOrNumber.toString().trim(),
+      "password": hashedPassword.toString().trim(),
+      "grant_type": "password"
+    }).then((value) {
+      print(" value[values] :: ${value}");
+      saveData(value);
+      Navigator.of(context).pushReplacementNamed('/customBottonNaviBar');
+    }).onError((error, stackTrace) {
+      print("error 1:: $error");
+    });
+  }
+
+  saveData(AuthTokenModel authtoken) async {
+    SharedPreferences sharedUser = await SharedPreferences.getInstance();
+    sharedUser.setString('user', jsonEncode(authtoken));
+    sharedUser.setString('authToken', 'Bearer ${authtoken.accessToken}');
+  }
 }

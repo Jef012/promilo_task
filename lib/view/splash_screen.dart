@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,45 +11,50 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   bool checkUser = false;
   bool isLoading = false;
-  // checkUserData() async {
-  //   SharedPreferences sharedUser = await SharedPreferences.getInstance();
-  //   var userDataString = sharedUser.getString('user');
-  //   var userString = sharedUser.getString('authToken');
-  //
-  //   print("userDataString :::::::: $userDataString");
-  //   print("userString :::::::: $userString");
-  //   if (userDataString != null) {
-  //     checkUser = true;
-  //     final appProvider = Provider.of<AppProvider>(context, listen: false);
-  //     appProvider.updateUser(userFromJson(userDataString));
-  //     // appProvider.updateUser(UserModel(token: userDataString));
-  //   } else {
-  //     checkUser = false;
-  //   }
-  // }
-@override
+  checkUserData() async {
+    SharedPreferences sharedUser = await SharedPreferences.getInstance();
+    var userDataString = sharedUser.getString('user');
+    var userString = sharedUser.getString('authToken');
+
+    print("userDataString :::::::: $userDataString");
+    print("userString :::::::: $userString");
+    if (userDataString != null) {
+      checkUser = true;
+    } else {
+      checkUser = false;
+    }
+  }
+
+  @override
   void initState() {
-     navigate();
+    navigate();
     super.initState();
   }
+
   void navigate() {
-    // checkUserData();
+    checkUserData();
     Future.delayed(Duration(milliseconds: 500), () {
       setState(() {
         isLoading = true;
       });
-      Navigator.of(context).pushReplacementNamed('/loginPage');
-      // Navigator.of(context).pushReplacementNamed('/home');
-      // if (checkUser) {
-      //   Navigator.of(context).pushReplacementNamed('/home');
-      // } else {
-      //   widget.updateWidget(1, UserArguments(newUser: true));
-      // }
+      if (checkUser) {
+        Navigator.of(context).pushReplacementNamed('/customBottonNaviBar');
+      } else {
+        Navigator.of(context).pushReplacementNamed('/loginPage');
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("Promilo",style: TextStyle(color: Colors.black,fontSize: MediaQuery.of(context).size.height * 0.037,fontWeight: FontWeight.w500),)));
+    return Scaffold(
+        body: Center(
+            child: Text(
+      "Promilo",
+      style: TextStyle(
+          color: Colors.black,
+          fontSize: MediaQuery.of(context).size.height * 0.037,
+          fontWeight: FontWeight.w500),
+    )));
   }
 }
