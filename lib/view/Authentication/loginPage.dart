@@ -5,10 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:promilo_task/constants/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../controller/repository/portfolioRepository.dart';
+import '../../controller/repository/authenticationRepository.dart';
 import '../../models/authTokenModel.dart';
-import '../widgets.dart';
+import '../widgets/widgets.dart';
+import '../widgets/customNavigationBar.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -289,10 +291,17 @@ class _LoginPageState extends State<LoginPage> {
       "password": hashedPassword.toString().trim(),
       "grant_type": "password"
     }).then((value) {
-      print(" value[values] :: ${value}");
+      Utils.toastMessage("Login successfully", "success");
       saveData(value);
-      Navigator.of(context).pushReplacementNamed('/customBottonNaviBar');
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CustomBottonNaviBar(
+              index: 2,
+            ),
+          ));
     }).onError((error, stackTrace) {
+      Utils.toastMessage(error.toString(), "error");
       print("error 1:: $error");
     });
   }

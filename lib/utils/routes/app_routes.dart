@@ -13,11 +13,11 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => SplashScreen());
       case '/loginPage':
         return MaterialPageRoute(builder: (_) => LoginPage());
-      case '/customBottonNaviBar':
-        return MaterialPageRoute(builder: (_) => CustomBottonNaviBar());
+      // case '/customBottonNaviBar':
+      //   return MaterialPageRoute(builder: (_) => CustomBottonNaviBar());
       case '/individualMeetup':
         return MaterialPageRoute(builder: (_) => IndividualMeetup());
-        case '/detailPage':
+      case '/detailPage':
         return MaterialPageRoute(builder: (_) => Description());
       default:
         return null;

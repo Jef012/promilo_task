@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:promilo_task/view/widgets/customNavigationBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -38,7 +39,13 @@ class _SplashScreenState extends State<SplashScreen> {
         isLoading = true;
       });
       if (checkUser) {
-        Navigator.of(context).pushReplacementNamed('/customBottonNaviBar');
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CustomBottonNaviBar(
+                index: 2,
+              ),
+            ));
       } else {
         Navigator.of(context).pushReplacementNamed('/loginPage');
       }

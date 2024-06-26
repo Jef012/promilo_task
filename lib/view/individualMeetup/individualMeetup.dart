@@ -3,8 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:persistent_bottom_nav_bar_v2/persistent_bottom_nav_bar_v2.dart';
 import 'package:promilo_task/view/individualMeetup/detailPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
+
+import '../splash_screen.dart';
 
 class IndividualMeetup extends StatefulWidget {
   const IndividualMeetup({Key? key}) : super(key: key);
@@ -58,9 +62,14 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
     setState(() {
       sharedUser.remove('user');
       sharedUser.remove('authToken');
-      Navigator.of(context).pushReplacementNamed("/");
     });
-
+    pushWithoutNavBar(
+        context, MaterialPageRoute(builder: (context) => SplashScreen()));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SplashScreen(),
+        ));
     print("LogOut");
   }
 
@@ -98,7 +107,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
           ),
           Expanded(
               child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(height: height * 0.025),
@@ -117,7 +126,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                           "Trending Popular People",
                           style: TextStyle(
                               color: HexColor("#072e43"),
-                              fontSize: height * 0.018,
+                              fontSize: height * 0.019,
                               fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -129,7 +138,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                             return Padding(
                               padding: EdgeInsets.only(left: width * 0.06),
                               child: trendingPopularPeopleCard(
-                                  height: height, width: width,index : index),
+                                  height: height, width: width, index: index),
                             );
                           },
                         ),
@@ -147,10 +156,10 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                         padding: EdgeInsets.only(
                             left: width * 0.06, bottom: width * 0.03),
                         child: Text(
-                          "Trending Popular People",
+                          "Top Trending Meetup",
                           style: TextStyle(
                               color: HexColor("#072e43"),
-                              fontSize: height * 0.018,
+                              fontSize: height * 0.019,
                               fontWeight: FontWeight.w700),
                         ),
                       ),
@@ -170,7 +179,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
                     ],
                   ),
                 ),
-                SizedBox(height: height * 0.03),
+                SizedBox(height: height * 0.09),
               ],
             ),
           )),
@@ -203,6 +212,9 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
           elevation: const WidgetStatePropertyAll(0),
           surfaceTintColor: const WidgetStatePropertyAll(Colors.white),
           backgroundColor: const WidgetStatePropertyAll(Colors.white),
+          onTapOutside: (event) {
+            FocusScope.of(context).unfocus();
+          },
           shape: WidgetStatePropertyAll(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: BorderSide(color: HexColor("#072e43"), width: 1.5))),
@@ -223,7 +235,8 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
               itemCount: imgList.length,
               options: CarouselOptions(
                 height: height * 0.25,
-                viewportFraction: 0.99,scrollPhysics: const BouncingScrollPhysics(),
+                viewportFraction: 0.99,
+                scrollPhysics: const BouncingScrollPhysics(),
                 enableInfiniteScroll: false,
                 autoPlay: false,
                 onPageChanged: (index, reason) {
@@ -295,8 +308,7 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
     );
   }
 
-  Widget trendingPopularPeopleCard({width, height,index}) {
-
+  Widget trendingPopularPeopleCard({width, height, index}) {
     return Container(
       height: height * 0.2,
       width: width * 0.8,
@@ -401,7 +413,13 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
 
   Widget topTrendingMeetupCard({width, height, meetup, int index = 0}) {
     return GestureDetector(
-      onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context) => Description(),));},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Description(),
+            ));
+      },
       child: Container(
         width: width * 0.45,
         margin: EdgeInsets.only(left: width * 0.06),
@@ -409,6 +427,20 @@ class _IndividualMeetupState extends State<IndividualMeetup> {
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
             image: NetworkImage(meetup),
+            onError: (exception, stackTrace) {
+              Shimmer.fromColors(
+                baseColor: Colors.grey,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: width * 0.45,
+                  margin: EdgeInsets.only(left: width * 0.06),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.grey[300],
+                  ),
+                ),
+              );
+            },
             fit: BoxFit.cover,
           ),
         ),
